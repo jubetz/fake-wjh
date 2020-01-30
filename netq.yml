@@ -1,0 +1,14 @@
+# example
+# 'wjh: true' goes in agent
+#
+#cumulus@leaf02:mgmt-vrf:~$ cat /etc/netq/netq.yml 
+
+netq-agent:
+  port: 31980
+  server: 192.168.0.254
+  vrf: mgmt
+  wjh: true
+netq-cli:
+  port: 32708
+  server: 192.168.0.254
+  vrf: mgmt
