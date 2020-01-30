@@ -1,0 +1,19 @@
+#/usr/share/venvs/netq-agent/lib/python2.7/site-packages/netq_agent/cmd/agent.py
+# Need to comment out the cl4 check
+
+def _start_wjh(self):
+        conf_dict = configuration.get_config(_PROC_NAME)
+        enabled = conf_dict.get('netq-agent').get('wjh', False)
+        if not enabled:
+            return None
+        #if configuration.is_cl4():
+        #vx = Platform.VX in self.__platform
+        mlx = 'mlnx' in self.__platform
+        #if mlx or (vx and self.__random_platform_info != 0):
+        if True:
+            conf_dict = configuration.get_config(_PROC_NAME)
+            wjh_client_inst = WjhClient(conf_dict, self._logger, is_mlx=mlx)
+            wjh_client_proc = Process(target=wjh_client_inst.start_wjh_client)
+            wjh_client_proc.start()
+            return wjh_client_proc
+        return None
