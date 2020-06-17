@@ -11,7 +11,7 @@
 
 - name: Copy WHJ configuration
   copy:
-    src: configurations/.whj.data
+    src: configurations/.wjh.data
     dest: /etc/netq/
   notify: reload netqagent
 

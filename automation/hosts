@@ -4,6 +4,3 @@ ansible_ssh_pass=CumulusLinux!
 
 [leaf]
 leaf02
-
-[pod1:children]
-leaf
