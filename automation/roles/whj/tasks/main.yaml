@@ -1,0 +1,19 @@
+---
+- name: Verify Minimum Software Version
+  assert:
+    that: "{{ansible_lsb.release is version_compare('3.7.12', '>=') }}"
+    msg: >
+      "Cumulus Linux version must be 3.7.12 or later.
+      Version {{ansible_lsb.release}} detected"
+
+- name: Enable WJH in the NetQ Agent
+  command: "netq config add agent wjh"
+
+- name: Copy WHJ configuration
+  copy:
+    src: configurations/.whj.data
+    dest: /etc/netq/
+  notify: reload netqagent
+
+- name: Flush Handlers, best practice
+  meta: flush_handlers

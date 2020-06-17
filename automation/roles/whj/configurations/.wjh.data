@@ -1,0 +1,165 @@
+###for leaf02
+
+#  <l1-drop-reason>
+#      <reason>Port admin down</reason>
+#      <reason>Auto-negotiation failure</reason>
+#      <reason>Logical mismatch with peer link</reason>
+#      <reason>Link training failure</reason>
+#      <reason>Peer is sending remote faults</reason>
+#      <reason>Bad signal integrity</reason>
+#      <reason>Cable/transceiver is not supported</reason>
+#      <reason>Cable/transceiver is unplugged</reason>
+#      <reason>Calibration failure</reason>
+#  </l1-drop-reason>
+#  <l2-drop-reason>
+#      <reason>MLAG port isolation</reason>
+#      <reason>Destination MAC is reserved (DMAC=01-80-C2-00-00-0x)</reason>
+#      <reason>VLAN tagging mismatch</reason>
+#      <reason>Ingress VLAN filtering</reason>
+#      <reason>Ingress spanning tree filter</reason>
+#      <reason>Unicast MAC table action discard</reason>
+#      <reason>Multicast egress port list is empty</reason>
+#      <reason>Port loopback filter</reason>
+#      <reason>Source MAC is multicast</reason>
+#      <reason>Source MAC equals destination MAC</reason>
+#  </l2-drop-reason>
+#  <router-drop-reason>
+#      <reason>Non-routable packet</reason>
+#      <reason>Blackhole route</reason>
+#      <reason>Unresolved neighbor/next-hop</reason>
+#      <reason>Blackhole ARP/neighbor</reason>
+#      <reason>IPv6 destination in multicast scope FFx0:/16</reason>
+#      <reason>IPv6 destination in multicast scope FFx1:/16</reason>
+#      <reason>Non IP packet</reason>
+#      <reason>Unicast destination IP but multicast destination MAC</reason>
+#      <reason>Destination IP is loopback address</reason>
+#      <reason>Source IP is multicast</reason>
+#      <reason>Source IP is in class E</reason>
+#      <reason>Source IP is loopback address</reason>
+#      <reason>Source IP is unspecified</reason>
+#      <reason>Checksum or IPver or IPv4 IHL too short</reason>
+#      <reason>Multicast MAC mismatch</reason>
+#      <reason>Source IP equals destination IP</reason>
+#      <reason>IPv4 source IP is limited broadcast</reason>
+#      <reason>IPv4 destination IP is local network (destination=0.0.0.0/8)</reason>
+#      <reason>IPv4 destination IP is link local</reason>
+#      <reason>Ingress router interface is disabled</reason>
+#      <reason>Egress router interface is disabled</reason>
+#      <reason>IPv4 routing table (LPM) unicast miss</reason>
+#      <reason>IPv6 routing table (LPM) unicast miss</reason>
+#      <reason>Router interface loopback</reason>
+#      <reason>Packet size is larger than MTU</reason>
+#      <reason>TTL value is too small</reason>
+#  </router-drop-reason>
+#  <tunnel-drop-reason>
+#      <reason>Overlay switch - Source MAC is multicast</reason>
+#      <reason>Overlay switch - Source MAC eqauls destination MAC</reason>
+#      <reason>Decapsulation error</reason>
+#  </tunnel-drop-reason>
+#  <acl-drop-reason>
+#      <reason>Ingress port ACL</reason>
+#      <reason>Ingress router ACL</reason>
+#      <reason>Egress router ACL</reason>
+#      <reason>Egress port ACL</reason>
+#  </acl-drop-reason>
+#  <buffer-drop-reason>
+#      <reason>Buffer drop</reason>
+#  </buffer-drop-reason>
+#
+#
+# Drop type:
+# L1
+# ACL
+# L2
+# Router
+# Tunnel
+# Buffer
+#
+# L1 drop must be put in the 'L1-drops' section and the valid fields are:
+#     ingress_port
+#     is_port_up
+#     port_down_reason
+#     state_change_count
+#     symbol_error_count
+#     crc_error_count
+#     description
+#
+# Other drops must be put under 'Other-drops' section, each with a 'drop_type'.  Fields are:
+#     reason (one of the reasons in the above xml for each type)
+#     drop_type (one of L2, ACL, Router, Tunnel, Buffer)
+#     ingress_port
+#     egress_port (specific to Buffer)
+#     traffic_class (specific to Buffer)
+#     acl_rule_id (specific to ACL)
+#     acl_bind_point (specific to ACL)
+#     acl_name (specific to ACL)
+#     acl_rule (specific to ACL)
+#     smac
+#     dmac
+#     sip
+#     dip
+#     sport
+#     dport
+#     proto
+#     count
+#
+# This data file must be defined in valid YAML format
+
+
+L1-drops:
+- drop:
+    ingress_port: swp3
+    is_port_up: False
+    port_down_reason: Oper down
+    state_change_count: 4
+    symbol_error_count: 0
+    crc_error_count: 0
+- drop:
+    ingress_port: swp4
+    is_port_up: True
+    port_down_reason: None
+    state_change_count: 0
+    symbol_error_count: 6
+    crc_error_count: 132
+
+Other-drops:
+- drop:
+    drop_type: Router
+    reason: Blackhole route
+    ingress_port: swp1
+    smac: 00:01:02:03:04:05
+    dmac: 00:06:07:08:09:0a
+    sip: 10.1.3.101
+    dip: 10.2.4.104
+    sport: 1235
+    dport: 43523
+    proto: 17
+    count: 43
+
+## A drop from server01 to server04
+- drop:
+    drop_type: Router
+    reason: Packet size is larger than MTU
+    ingress_port: swp1
+    smac: 00:03:00:11:11:02 
+    dmac: 44:39:39:ff:00:13
+    sip: 10.1.3.101
+    dip: 10.2.4.104
+    sport: 1235
+    dport: 43523
+    proto: 6
+    count: 36
+
+- drop:
+    drop_type: ACL
+    reason: Ingress router ACL
+    ingress_port: swp2
+    smac: 00:32:10:45:76:89
+    dmac: 00:ab:05:d4:1b:13
+    sip: 10.1.3.101
+    dip: 10.2.4.104
+    sport: 8492
+    dport: 21423
+    proto: 17
+    count: 49
+
