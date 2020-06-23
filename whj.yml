@@ -1,0 +1,8 @@
+#####
+# FreeRadius Ansible PoC Playbook
+#####
+
+- hosts: leaf
+  become: true
+  roles:
+  - whj
